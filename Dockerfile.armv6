@@ -1,4 +1,6 @@
-FROM alpine:3.9.3
+FROM arm32v6/alpine:3.9.4
+
+COPY qemu-arm-static  /usr/bin
 
 RUN apk update && \
     apk add --no-cache socat
@@ -6,6 +8,6 @@ RUN apk update && \
 ENV IN="172.18.0.1:9323" \
     OUT="9323"
 
-EXPOSE "9323"
+EXPOSE 9323
 
 ENTRYPOINT socat -d -d -d TCP-L:$OUT,fork TCP:$IN
