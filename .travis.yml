@@ -8,6 +8,7 @@ services:
 env:
   global:
     - qemu_version=4.0.0
+    - target_version=0.2.0
   matrix:
     - target_arch=amd64 qemu_arch=x86_64
     - target_arch=armv7 qemu_arch=arm
