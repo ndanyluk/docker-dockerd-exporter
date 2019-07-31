@@ -44,3 +44,21 @@ after_success:
       docker push ndanyluk/dockerd-exporter-${target_arch}:${target_version};
       docker push ndanyluk/dockerd-exporter-${target_arch}:latest;
     fi
+
+jobs:
+  include:
+    - stage: deploy
+      install: skip
+      script: skip
+      after_success:
+        - if [ -z "$DOCKER_USER" ]; then
+            echo "PR build, skipping Docker Hub push";
+          elif [ "$TRAVIS_BRANCH" != "master" ]; then
+            echo "Branch build, skipping Docker Hub push";
+          else
+            docker login -u "$DOCKER_USER" -p "$DOCKER_PASS";
+            docker manifest create ndanyluk/dockerd-exporter:${target_version} ndanyluk/dockerd-exporter-armv6:${target_version} ndanyluk/dockerd-exporter-arm64:${target_version} ndanyluk/dockerd-exporter-amd64:${target_version};
+            docker manifest create ndanyluk/dockerd-exporter:latest ndanyluk/dockerd-exporter-armv6:latest ndanyluk/dockerd-exporter-arm64:latest ndanyluk/dockerd-exporter-amd64:latest;
+            docker manifest push ndanyluk/dockerd-exporter:${target_version};
+            docker manifest push ndanyluk/dockerd-exporter:latest;
+          fi
