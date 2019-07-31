@@ -20,7 +20,12 @@ before_install:
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt-get update
   - sudo apt-get -y install docker-ce
+  - mkdir $HOME/.docker
+  - 'echo "{" > $HOME/.docker/config.json'
+  - 'echo "  \"experimental\": \"enabled\"" >> $HOME/.docker/config.json'
+  - 'echo "}" >> $HOME/.docker/config.json'
   - sudo service docker restart
+  - mkdir bin
 
 install:
   - docker run --rm --privileged multiarch/qemu-user-static:register
